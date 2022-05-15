@@ -64,6 +64,15 @@ class DBController
 		return $result;
 	}
 
+    public function getTCarBaseById ($id){
+		$sql="select * from t_car_base where id=:tid";
+		$statement = $this->mConnector->prepare($sql);
+		$statement->bindParam(":tid", $id);
+		$statement->execute();
+		$result=$statement->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
     public function getRowCount($keyword, $carNumber) {
         $sql="SELECT count(*) from t_car_base ";
         if ($keyword || $carNumber) {
@@ -95,6 +104,14 @@ class DBController
 
     public function getMMakerList(){
 		$sql="select id,name from m_maker";
+		$statement = $this->mConnector->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll();
+		return $result;
+	}
+
+    public function getMCarNameList(){
+		$sql="select * from m_car_name";
 		$statement = $this->mConnector->prepare($sql);
 		$statement->execute();
 		$result=$statement->fetchAll();
