@@ -5,42 +5,155 @@ require_once("config.php");
 require_once("dbcontroller.php");
 
 $dbController = new DBController($connector);
+
+if (isset($_POST['confirmed'])) {
+	if ($_POST['from'] == "edit") {
+		// $controller->updateTCarBase($_POST['id'], $_POST['st_cd'], $_POST['maker_name'], $_POST['car_name'], strip_tags($_POST['car_type']), strip_tags($_POST['frame_number']), $_POST['first_entry_date'], strip_tags($_POST['out_color_name']), $_POST['shift_cd'], $_POST['shift_cnt'], $_POST['shift_posi_cd'], $_POST['sale_price']);
+		header("Location: index.php?message=edit");
+	} else if ($_POST['from'] == "register") {
+		// $controller->insertIntoTCarBase ($_POST['st_cd'], $_POST['maker_name'], $_POST['car_name'], strip_tags($_POST['car_type']), strip_tags($_POST['frame_number']), $_POST['first_entry_date'], strip_tags($_POST['out_color_name']), $_POST['shift_cd'], $_POST['shift_cnt'], $_POST['shift_posi_cd'], $_POST['sale_price']);
+		// header("Location: index.php");
+		header("Location: index.php?message=insert");
+	}
+}
 $mCommons = $dbController->getMCommonList();
+$mCommons = $dbController->getMCommonList();
+$mMaker = $dbController->getMMakerById($_POST['maker_cd']);
+$mCarName = $dbController->getMCarNameById($_POST['car_name_cd']);
 
+require_once('header.php');
 ?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<div id="container">
+	<div class="globalNav clearfix">
+		<ul>
+			<li class="slide">
+				<a href="#">トップページ</a>
+			</li>
+			<li class="slide">
+				<a href="./list.html">車輌管理</a>
+			</li>
+		</ul>
+	</div><!-- End of.globalNav -->
 
-<head>
-    <meta http-equiv="content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="content-language" content="ja">
-    <meta http-equiv="content-style-type" content="text/css">
-    <meta http-equiv="content-script-type" content="text/javascript">
-    <meta http-equiv="imagetoolbar" content="no">
-    <meta name="viewport" content="width=1024">
-    <meta http-equiv="keywords" content="">
-    <meta http-equiv="discription" content="">
-    <title>車輌管理</title>
-    <link rel="stylesheet" type="text/css" href="./css/styles.css" media="screen, print">
-    <link rel="stylesheet" type="text/css" href="./css/jquery-ui.min.css" media="screen, print">
-    <script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="./js/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="./js/main.js"></script>
-</head>
+	<div id="contents" class="clearfix">
+		<form id="submit_form" name="submit_form" action="confirm.php" method="post">
+			<div class="inner">
+				<h2>車輌管理</h2>
 
-<body class="car">
+				<div class="column">
+					<h3>確認画面</h3>
+					<table class="tableTypeB">
+						<tbody>
+							<tr>
+								<th>ステータス</th>
+								<td>
+									<?php echo $mCommons[1][$_POST['st_cd']]; ?>
+									<input type="hidden" name="st_cd" value="<?php echo $_POST['st_cd']; ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>メーカー名</th>
+								<td>
+									<?php echo $mMaker; ?>
+									<input type="hidden" name="maker_name" value="<?php echo $m_maker; ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>車名</th>
+								<td>
+									<?php echo $mCarName; ?>
+									<input type="hidden" name="car_name" value="<?php echo $m_car_name; ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>型式</th>
+								<td>
+									<?php echo htmlspecialchars($_POST['car_type'], ENT_QUOTES, 'UTF-8'); ?>
+									<input type="hidden" name="car_type" value="<?php echo htmlspecialchars($_POST['car_type'], ENT_QUOTES, 'UTF-8'); ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>車台番号</th>
+								<td>
+									<?php echo htmlspecialchars($_POST['frame_number'], ENT_QUOTES, 'UTF-8'); ?>
+									<input type="hidden" name="frame_number" value="<?php echo htmlspecialchars($_POST['frame_number'], ENT_QUOTES, 'UTF-8'); ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>初年度登録</th>
+								<td>
+									<?php $month = ($_POST['first_entry_date_m']) ? $_POST['first_entry_date_m'] : '00'; ?>
+									<?php echo $_POST['first_entry_date_y']; ?>&nbsp;年&nbsp;<?php echo $month; ?>&nbsp;月
+									<input type="hidden" name="first_entry_date" value="<?php echo $_POST['first_entry_date_y'] . $month . '00'; ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>外装色</th>
+								<td>
+									<?php echo htmlspecialchars($_POST['out_color_name'], ENT_QUOTES, 'UTF-8'); ?>
+									<input type="hidden" name="out_color_name" value="<?php echo htmlspecialchars($_POST['out_color_name'], ENT_QUOTES, 'UTF-8'); ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>シフト</th>
+								<td>
+									<?php echo $mCommons[7][$_POST['shift_posi_cd']] . " " . htmlspecialchars($_POST['shift_cnt'], ENT_QUOTES, 'UTF-8') . " " . $mCommons[6][$_POST['shift_cd']]; ?>
+									<input type="hidden" name="shift_cd" value="<?php echo $_POST['shift_cd']; ?>">
+									<input type="hidden" name="shift_posi_cd" value="<?php echo $_POST['shift_posi_cd']; ?>">
+									<input type="hidden" name="shift_cnt" value="<?php echo htmlspecialchars($_POST['shift_cnt'], ENT_QUOTES, 'UTF-8'); ?>">
+								</td>
+							</tr>
+							<tr>
+								<th>小売価格</th>
+								<td>
+									<?php echo htmlspecialchars($_POST['sale_price'], ENT_QUOTES, 'UTF-8'); ?>&nbsp;円
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><!-- End of.column -->
 
-    <div id="container">
-        <div class="globalNav clearfix">
-            <ul>
-                <li class="slide">
-                    <a href="#">トップページ</a>
-                </li>
-                <li class="slide">
-                    <a href="./list.html">車輌管理</a>
-                </li>
-            </ul>
-        </div><!-- End of.globalNav -->
-    </div>
-</body>
-</html>
+				<div class="btnBox">
+					<!-- <input type="button" value="戻る" id="car_submit_btn" class="btnRed wL back_btn""> -->
+					<a href=" javascript:history.back();"><input type="button" value="戻る" id="car_submit_btn" class="btnRed wL"></a>
+					<input type="hidden" name="from" value="<?php echo $_POST['from']; ?>">
+					<input type="hidden" name="id" value="<?php echo $_POST['id']; ?>">
+					<input type="submit" name="confirmed" id="car_submit_btn" class="btnRed wL" value="<?php echo ($_POST['from'] == 'register') ? '登録する' : '編集する'; ?>" />
+				</div>
+			</div><!-- End of.inner -->
+		</form>
+	</div><!-- End of#contents -->
+
+	<div id="footer">
+		<p>&#169; COPYLIGHT (C) 2017 GENIO CO.,LTD. ALL RIGHT RESERVED.</p>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		$('.back_btn').click(function() {
+			console.log('Back Clicked');
+			var url = 'register.php';
+
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: {
+					'st_cd': '1'
+				},
+				dataType: 'json',
+				success: function(result) {
+					// $('.modal-box').text(result).fadeIn(700, function() {
+					// 	setTimeout(function() {
+					// 		$('.modal-box').fadeOut();
+					// 	}, 2000);
+					// });
+				}
+			});
+		})
+	});
+</script>
+
+<?php
+require_once('footer.php');
+?>

@@ -1,6 +1,27 @@
 <?php
 class DBController
 {
+    var $dumpMakers = array(
+        '0' => array(
+            'id' => '0',
+            'name' => 'Toyota'
+        ),
+        '1' => array(
+            'id' => '1',
+            'name' => 'Volkswagen'
+        )
+    );
+    var $dumpCarNames = array(
+        array(
+            'id' => '0',
+            'name' => 'Toyota Avalon.'
+        ),
+        array(
+            'id' => '1',
+            'name' => 'Volkswagen Taos.'
+        )
+    );
+
     public $mConnector;
     function __construct($conn)
     {
@@ -9,112 +30,189 @@ class DBController
 
     public function getTCarList($index, $limit)
     {
-        $sql = "select * from t_car_base LIMIT ".$index.", ".$limit;
+        $sql = "select * from t_car_base LIMIT " . $index . ", " . $limit;
         $statement = $this->mConnector->prepare($sql);
         $statement->execute();
         $result = $statement->fetchAll();
         return $result;
     }
 
-    public function sortTCars ($order_by, $sort_order, $index, $limit) {
-		$sql="select * from t_car_base order by ".$order_by." ".$sort_order." LIMIT ".$index.", ".$limit;
-		$statement = $this->mConnector->prepare($sql);
-		$statement->execute();
-		$result = $statement->fetchAll();
-		return $result;
-	}
-
-    public function getMCommonList(){
-		$sql = "select data_type,data_cd,value1 from m_common";
-		$statement = $this->mConnector->prepare($sql);
-		$statement->execute();
-		$result=$statement->fetchAll();
-
-		$m_common=array();
-		foreach ($result as $value) {
-			$m_common[$value["data_type"]][$value["data_cd"]]=$value["value1"];
-		}
-		return $m_common;
-	}
-
-    public function searchTCars ($keyword, $carNumber, $index, $limit){
-        $sql="SELECT * from t_car_base where ";
-        if($keyword) {
-            $sql.= "(maker_name like :mname or car_name like :cname) ";
-        }
-        if($carNumber) {
-            if($keyword) {
-                $sql.= "and ";
-            }
-            $sql.= "frame_number like :fnumber ";
-        }
-        $sql.=" LIMIT ".$index.", ".$limit;
+    public function sortTCars($order_by, $sort_order, $index, $limit)
+    {
+        $sql = "select * from t_car_base order by " . $order_by . " " . $sort_order . " LIMIT " . $index . ", " . $limit;
         $statement = $this->mConnector->prepare($sql);
-        if($keyword) {
-            $keyParam = '%'.$keyword.'%';
-			$statement->bindParam(":mname", $keyParam);
-			$statement->bindParam(":cname", $keyParam);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        return $result;
+    }
+
+    public function getMCommonList()
+    {
+        $sql = "select data_type,data_cd,value1 from m_common";
+        $statement = $this->mConnector->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+
+        $m_common = array();
+        foreach ($result as $value) {
+            $m_common[$value["data_type"]][$value["data_cd"]] = $value["value1"];
         }
-        if($carNumber) {
-            $carNumParam = '%'.$carNumber.'%';
+        return $m_common;
+    }
+
+    public function searchTCars($keyword, $carNumber, $index, $limit)
+    {
+        $sql = "SELECT * from t_car_base where ";
+        if ($keyword) {
+            $sql .= "(maker_name like :mname or car_name like :cname) ";
+        }
+        if ($carNumber) {
+            if ($keyword) {
+                $sql .= "and ";
+            }
+            $sql .= "frame_number like :fnumber ";
+        }
+        $sql .= " LIMIT " . $index . ", " . $limit;
+        $statement = $this->mConnector->prepare($sql);
+        if ($keyword) {
+            $keyParam = '%' . $keyword . '%';
+            $statement->bindParam(":mname", $keyParam);
+            $statement->bindParam(":cname", $keyParam);
+        }
+        if ($carNumber) {
+            $carNumParam = '%' . $carNumber . '%';
             $statement->bindParam(":fnumber", $carNumParam);
         }
         $statement->execute();
         $result = $statement->fetchAll();
-		return $result;
-	}
+        return $result;
+    }
 
-    public function getTCarBaseById ($id){
-		$sql="select * from t_car_base where id=:tid";
-		$statement = $this->mConnector->prepare($sql);
-		$statement->bindParam(":tid", $id);
-		$statement->execute();
-		$result=$statement->fetch(PDO::FETCH_ASSOC);
-		return $result;
-	}
+    public function getTCarBaseById($id)
+    {
+        $sql = "select * from t_car_base where id=:tid";
+        $statement = $this->mConnector->prepare($sql);
+        $statement->bindParam(":tid", $id);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
 
-    public function getRowCount($keyword, $carNumber) {
-        $sql="SELECT count(*) from t_car_base ";
+    public function getRowCount($keyword, $carNumber)
+    {
+        $sql = "SELECT count(*) from t_car_base ";
         if ($keyword || $carNumber) {
             $sql .= "where ";
         }
-        if($keyword) {
-            $sql.= "(maker_name like :mname or car_name like :cname) ";
+        if ($keyword) {
+            $sql .= "(maker_name like :mname or car_name like :cname) ";
         }
-        if($carNumber) {
-            if($keyword) {
-                $sql.= "and ";
+        if ($carNumber) {
+            if ($keyword) {
+                $sql .= "and ";
             }
-            $sql.= "frame_number like :fnumber ";
+            $sql .= "frame_number like :fnumber ";
         }
         $statement = $this->mConnector->prepare($sql);
-        if($keyword) {
-            $keyParam = '%'.$keyword.'%';
-			$statement->bindParam(":mname", $keyParam);
-			$statement->bindParam(":cname", $keyParam);
+        if ($keyword) {
+            $keyParam = '%' . $keyword . '%';
+            $statement->bindParam(":mname", $keyParam);
+            $statement->bindParam(":cname", $keyParam);
         }
-        if($carNumber) {
-            $carNumParam = '%'.$carNumber.'%';
+        if ($carNumber) {
+            $carNumParam = '%' . $carNumber . '%';
             $statement->bindParam(":fnumber", $carNumParam);
         }
         $statement->execute();
         $count = $statement->fetchColumn();
-		return $count;
+        return $count;
     }
 
-    public function getMMakerList(){
-		$sql="select id,name from m_maker";
-		$statement = $this->mConnector->prepare($sql);
-		$statement->execute();
-		$result=$statement->fetchAll();
-		return $result;
-	}
+    public function getMMakerList()
+    {
+        $sql = "select id,name from m_maker";
+        $statement = $this->mConnector->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $result = $this->dumpMakers;
+        return $result;
+    }
 
-    public function getMCarNameList(){
-		$sql="select * from m_car_name";
-		$statement = $this->mConnector->prepare($sql);
-		$statement->execute();
-		$result=$statement->fetchAll();
-		return $result;
-	}
+    public function getMCarNameList()
+    {
+        $sql = "select * from m_car_name";
+        $statement = $this->mConnector->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $result = $this->dumpCarNames;
+        return $result;
+    }
+
+    public function getMMakerById($id)
+    {
+        // $sql = "select name from m_maker where id=:id";
+        // $statement = $this->mConnector->prepare($sql);
+        // $statement->bindParam(":id", $id);
+        // $statement->execute();
+        // $result = $statement->fetchColumn();
+        foreach ($this->dumpMakers as $value) {
+            if ($value['id'] == $id) {
+                return $value['name'];
+            }
+        }
+        return '';
+    }
+
+    public function getMCarNameById($id)
+    {
+        // $sql = "select name from m_car_name where id=:id";
+        // $statement = $this->mConnector->prepare($sql);
+        // $statement->bindParam(":id", $id);
+        // $statement->execute();
+        // $result = $statement->fetchColumn();
+        // return $result;
+        foreach ($this->dumpCarNames as $value) {
+            if ($value['id'] == $id) {
+                return $value['name'];
+            }
+        }
+        return '';
+    }
+
+    public function insertTCar ($st_cd, $maker_name, $car_name, $car_type, $frame_number, $first_entry_date, $out_color_name, $shift_cd, $shift_cnt, $shift_posi_cd, $sale_price) {
+        $sql = 'insert into t_car_base (ins_user_id, st_cd, maker_name, car_name, car_type, frame_number, first_entry_date, out_color_name, shift_cd, shift_cnt, shift_posi_cd, sale_price) 
+        values (:ins_user_id, :st_cd, :maker_name, :car_name, :car_type, :frame_number, :first_entry_date, :out_color_name, :shift_cd, :shift_cnt, :shift_posi_cd, :sale_price)';
+        $statement = $this->mConnector->prepare($sql);
+        $statement->bindParam(":ins_user_id",0);
+		$statement->bindParam(":st_cd",$st_cd);
+		$statement->bindParam(":maker_name",$maker_name);
+		$statement->bindParam(":car_name",$car_name);
+		$statement->bindParam(":car_type",$car_type);
+		$statement->bindParam(":frame_number",$frame_number);
+		$statement->bindParam(":first_entry_date",$first_entry_date);
+		$statement->bindParam(":out_color_name",$out_color_name);
+		$statement->bindParam(":shift_cd",$shift_cd);
+		$statement->bindParam(":shift_cnt",$shift_cnt);
+		$statement->bindParam(":shift_posi_cd",$shift_posi_cd);
+		$statement->bindParam(":sale_price",$sale_price);
+		return $statement->execute();
+    }
+
+    public function updateTCar($id, $st_cd, $maker_name, $car_name, $car_type, $frame_number, $first_entry_date, $out_color_name, $shift_cd, $shift_cnt, $shift_posi_cd, $sale_price) {
+        $sql = 'update t_car_base set st_cd = :st_cd, maker_name = :maker_name, car_name = :car_name, car_type = :car_type, frame_number = :frame_number, first_entry_date = :first_entry_date, out_color_name = :out_color_name, shift_cd = :shift_cd, shift_cnt = :shift_cnt, shift_posi_cd = :shift_posi_cd, sale_price = :sale_price where id= :id';
+        $statement = $this->mConnector->prepare($sql);
+		$statement->bindParam(":id",$id);
+		$statement->bindParam(":st_cd",$st_cd);
+		$statement->bindParam(":maker_name",$maker_name);
+		$statement->bindParam(":car_name",$car_name);
+		$statement->bindParam(":car_type",$car_type);
+		$statement->bindParam(":frame_number",$frame_number);
+		$statement->bindParam(":first_entry_date",$first_entry_date);
+		$statement->bindParam(":out_color_name",$out_color_name);
+		$statement->bindParam(":shift_cd",$shift_cd);
+		$statement->bindParam(":shift_cnt",$shift_cnt);
+		$statement->bindParam(":shift_posi_cd",$shift_posi_cd);
+		$statement->bindParam(":sale_price",$sale_price);
+        return $statement->execute();
+    }
 }
