@@ -1,27 +1,6 @@
 <?php
 class DBController
 {
-    var $dumpMakers = array(
-        '0' => array(
-            'id' => '0',
-            'name' => 'Toyota'
-        ),
-        '1' => array(
-            'id' => '1',
-            'name' => 'Volkswagen'
-        )
-    );
-    var $dumpCarNames = array(
-        array(
-            'id' => '0',
-            'name' => 'Toyota Avalon.'
-        ),
-        array(
-            'id' => '1',
-            'name' => 'Volkswagen Taos.'
-        )
-    );
-
     public $mConnector;
     function __construct($conn)
     {
@@ -134,7 +113,6 @@ class DBController
         $statement = $this->mConnector->prepare($sql);
         $statement->execute();
         $result = $statement->fetchAll();
-        $result = $this->dumpMakers;
         return $result;
     }
 
@@ -144,46 +122,36 @@ class DBController
         $statement = $this->mConnector->prepare($sql);
         $statement->execute();
         $result = $statement->fetchAll();
-        $result = $this->dumpCarNames;
         return $result;
     }
 
     public function getMMakerById($id)
     {
-        // $sql = "select name from m_maker where id=:id";
-        // $statement = $this->mConnector->prepare($sql);
-        // $statement->bindParam(":id", $id);
-        // $statement->execute();
-        // $result = $statement->fetchColumn();
-        foreach ($this->dumpMakers as $value) {
-            if ($value['id'] == $id) {
-                return $value['name'];
-            }
-        }
-        return '';
+        $sql = "select name from m_maker where id=:id";
+        $statement = $this->mConnector->prepare($sql);
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        $result = $statement->fetchColumn();
+        return $result;
     }
 
     public function getMCarNameById($id)
     {
-        // $sql = "select name from m_car_name where id=:id";
-        // $statement = $this->mConnector->prepare($sql);
-        // $statement->bindParam(":id", $id);
-        // $statement->execute();
-        // $result = $statement->fetchColumn();
-        // return $result;
-        foreach ($this->dumpCarNames as $value) {
-            if ($value['id'] == $id) {
-                return $value['name'];
-            }
-        }
-        return '';
+        $sql = "select name from m_car_name where id=:id";
+        $statement = $this->mConnector->prepare($sql);
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        $result = $statement->fetchColumn();
+        return $result;
     }
 
     public function insertTCar ($st_cd, $maker_name, $car_name, $car_type, $frame_number, $first_entry_date, $out_color_name, $shift_cd, $shift_cnt, $shift_posi_cd, $sale_price) {
-        $sql = 'insert into t_car_base (ins_user_id, st_cd, maker_name, car_name, car_type, frame_number, first_entry_date, out_color_name, shift_cd, shift_cnt, shift_posi_cd, sale_price) 
-        values (:ins_user_id, :st_cd, :maker_name, :car_name, :car_type, :frame_number, :first_entry_date, :out_color_name, :shift_cd, :shift_cnt, :shift_posi_cd, :sale_price)';
-        $statement = $this->mConnector->prepare($sql);
-        $statement->bindParam(":ins_user_id",0);
+        $this->mConnector->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $sql="insert into t_car_base (ins_user_id, st_cd, maker_name, car_name, car_type, frame_number, first_entry_date, out_color_name, shift_cd, shift_cnt, shift_posi_cd, sale_price) values (:ins_user_id, :st_cd, :maker_name, :car_name, :car_type, :frame_number, :first_entry_date, :out_color_name, :shift_cd, :shift_cnt, :shift_posi_cd, :sale_price)";
+		$statement = $this->mConnector->prepare($sql);
+		$ins_user_id=0;
+		$statement->bindParam(":ins_user_id",$ins_user_id);
 		$statement->bindParam(":st_cd",$st_cd);
 		$statement->bindParam(":maker_name",$maker_name);
 		$statement->bindParam(":car_name",$car_name);
@@ -199,7 +167,9 @@ class DBController
     }
 
     public function updateTCar($id, $st_cd, $maker_name, $car_name, $car_type, $frame_number, $first_entry_date, $out_color_name, $shift_cd, $shift_cnt, $shift_posi_cd, $sale_price) {
-        $sql = 'update t_car_base set st_cd = :st_cd, maker_name = :maker_name, car_name = :car_name, car_type = :car_type, frame_number = :frame_number, first_entry_date = :first_entry_date, out_color_name = :out_color_name, shift_cd = :shift_cd, shift_cnt = :shift_cnt, shift_posi_cd = :shift_posi_cd, sale_price = :sale_price where id= :id';
+        $this->mConnector->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $sql = "update t_car_base set st_cd = :st_cd, maker_name = :maker_name, car_name = :car_name, car_type = :car_type, frame_number = :frame_number, first_entry_date = :first_entry_date, out_color_name = :out_color_name, shift_cd = :shift_cd, shift_cnt = :shift_cnt, shift_posi_cd = :shift_posi_cd, sale_price = :sale_price where id= :id";
         $statement = $this->mConnector->prepare($sql);
 		$statement->bindParam(":id",$id);
 		$statement->bindParam(":st_cd",$st_cd);

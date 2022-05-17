@@ -8,12 +8,11 @@ $dbController = new DBController($connector);
 
 if (isset($_POST['confirmed'])) {
 	if ($_POST['from'] == "edit") {
-		// $controller->updateTCarBase($_POST['id'], $_POST['st_cd'], $_POST['maker_name'], $_POST['car_name'], strip_tags($_POST['car_type']), strip_tags($_POST['frame_number']), $_POST['first_entry_date'], strip_tags($_POST['out_color_name']), $_POST['shift_cd'], $_POST['shift_cnt'], $_POST['shift_posi_cd'], $_POST['sale_price']);
-		header("Location: index.php?message=edit");
+		$dbController->updateTCar($_POST['id'], $_POST['st_cd'], $_POST['maker_name'], $_POST['car_name'], strip_tags($_POST['car_type']), strip_tags($_POST['frame_number']), $_POST['first_entry_date'], strip_tags($_POST['out_color_name']), $_POST['shift_cd'], $_POST['shift_cnt'], $_POST['shift_posi_cd'], $_POST['sale_price']);
+		header("Location: index.php");
 	} else if ($_POST['from'] == "register") {
-		// $controller->insertIntoTCarBase ($_POST['st_cd'], $_POST['maker_name'], $_POST['car_name'], strip_tags($_POST['car_type']), strip_tags($_POST['frame_number']), $_POST['first_entry_date'], strip_tags($_POST['out_color_name']), $_POST['shift_cd'], $_POST['shift_cnt'], $_POST['shift_posi_cd'], $_POST['sale_price']);
-		// header("Location: index.php");
-		header("Location: index.php?message=insert");
+		$insert = $dbController->insertTCar ($_POST['st_cd'], strip_tags($_POST['maker_name']), strip_tags($_POST['car_name']), strip_tags($_POST['car_type']), strip_tags($_POST['frame_number']), $_POST['first_entry_date'], strip_tags($_POST['out_color_name']), $_POST['shift_cd'], $_POST['shift_cnt'], $_POST['shift_posi_cd'], $_POST['sale_price']);
+		header("Location: index.php");
 	}
 }
 $mCommons = $dbController->getMCommonList();
@@ -55,35 +54,35 @@ require_once('header.php');
 								<th>メーカー名</th>
 								<td>
 									<?php echo $mMaker; ?>
-									<input type="hidden" name="maker_name" value="<?php echo $m_maker; ?>">
+									<input type="hidden" name="maker_name" value="<?php echo $mMaker; ?>">
 								</td>
 							</tr>
 							<tr>
 								<th>車名</th>
 								<td>
 									<?php echo $mCarName; ?>
-									<input type="hidden" name="car_name" value="<?php echo $m_car_name; ?>">
+									<input type="hidden" name="car_name" value="<?php echo $mCarName; ?>">
 								</td>
 							</tr>
 							<tr>
 								<th>型式</th>
 								<td>
 									<?php echo htmlspecialchars($_POST['car_type'], ENT_QUOTES, 'UTF-8'); ?>
-									<input type="hidden" name="car_type" value="<?php echo htmlspecialchars($_POST['car_type'], ENT_QUOTES, 'UTF-8'); ?>">
+									<input type="hidden" name="car_type" value="<?php echo htmlspecialchars($_POST['car_type']); ?>">
 								</td>
 							</tr>
 							<tr>
 								<th>車台番号</th>
 								<td>
 									<?php echo htmlspecialchars($_POST['frame_number'], ENT_QUOTES, 'UTF-8'); ?>
-									<input type="hidden" name="frame_number" value="<?php echo htmlspecialchars($_POST['frame_number'], ENT_QUOTES, 'UTF-8'); ?>">
+									<input type="hidden" name="frame_number" value="<?php echo htmlspecialchars($_POST['frame_number']); ?>">
 								</td>
 							</tr>
 							<tr>
 								<th>初年度登録</th>
 								<td>
 									<?php $month = ($_POST['first_entry_date_m']) ? $_POST['first_entry_date_m'] : '00'; ?>
-									<?php echo $_POST['first_entry_date_y']; ?>&nbsp;年&nbsp;<?php echo $month; ?>&nbsp;月
+									<?php echo $_POST['first_entry_date_y']; ?> 年 <?php echo $month; ?> 月
 									<input type="hidden" name="first_entry_date" value="<?php echo $_POST['first_entry_date_y'] . $month . '00'; ?>">
 								</td>
 							</tr>
@@ -91,22 +90,23 @@ require_once('header.php');
 								<th>外装色</th>
 								<td>
 									<?php echo htmlspecialchars($_POST['out_color_name'], ENT_QUOTES, 'UTF-8'); ?>
-									<input type="hidden" name="out_color_name" value="<?php echo htmlspecialchars($_POST['out_color_name'], ENT_QUOTES, 'UTF-8'); ?>">
+									<input type="hidden" name="out_color_name" value="<?php echo htmlspecialchars($_POST['out_color_name']); ?>">
 								</td>
 							</tr>
 							<tr>
 								<th>シフト</th>
 								<td>
-									<?php echo $mCommons[7][$_POST['shift_posi_cd']] . " " . htmlspecialchars($_POST['shift_cnt'], ENT_QUOTES, 'UTF-8') . " " . $mCommons[6][$_POST['shift_cd']]; ?>
+									<?php echo $mCommons[7][$_POST['shift_posi_cd']] . " " . htmlspecialchars($_POST['shift_cnt']) . " " . $mCommons[6][$_POST['shift_cd']]; ?>
 									<input type="hidden" name="shift_cd" value="<?php echo $_POST['shift_cd']; ?>">
 									<input type="hidden" name="shift_posi_cd" value="<?php echo $_POST['shift_posi_cd']; ?>">
-									<input type="hidden" name="shift_cnt" value="<?php echo htmlspecialchars($_POST['shift_cnt'], ENT_QUOTES, 'UTF-8'); ?>">
+									<input type="hidden" name="shift_cnt" value="<?php echo htmlspecialchars($_POST['shift_cnt']); ?>">
 								</td>
 							</tr>
 							<tr>
 								<th>小売価格</th>
 								<td>
-									<?php echo htmlspecialchars($_POST['sale_price'], ENT_QUOTES, 'UTF-8'); ?>&nbsp;円
+									<?php echo htmlspecialchars($_POST['sale_price'], ENT_QUOTES, 'UTF-8'); ?> 円
+									<input type="hidden" name="sale_price" value="<?php echo htmlspecialchars($_POST['sale_price']); ?>">
 								</td>
 							</tr>
 						</tbody>

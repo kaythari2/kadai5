@@ -44,15 +44,14 @@ require_once('header.php');
                                 <th>ステータス</th>
                                 <td>
                                     <select name="st_cd">
-                                        <?php 
+                                        <?php
                                         foreach ($mCommons[1] as $key => $value) {
                                         ?>
-                                        
+
                                             <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData["st_cd"] == $key) {
                                                                                     echo "selected";
-                                                                                } elseif(isset($_POST['st_cd']) && $_POST["st_cd"] == $key) {
-                                                                                    echo "selected";
-                                                                                }  ?>>
+                                                                                }
+                                                                                ?>>
                                                 <?php echo $value; ?>
                                             </option>
                                         <?php
@@ -166,7 +165,7 @@ require_once('header.php');
                             </tr>
                             <tr>
                                 <th>小売価格</th>
-                                <td><input type="text" name="sale_price" value="<?php echo (isset($editData['sale_price'])) ? $editData['sale_price'] : ''; ?>" class="wM">&nbsp;円</td>
+                                <td><input type="text" name="sale_price" value="<?php echo (isset($editData['sale_price'])) ? $editData['sale_price'] : ''; ?>" class="wM"> 円</td>
                             </tr>
                         </tbody>
                     </table>
