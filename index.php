@@ -183,9 +183,9 @@ require_once('header.php');
 									<td><a href="register.php?id=<?php echo $car['id']; ?>"><?php
 																							echo htmlspecialchars($car['maker_name']);
 																							?></a></td>
-									<td><?php
-										echo htmlspecialchars($car['car_name']);
-										?></td>
+									<td><a href="register.php?id=<?php echo $car['id']; ?>"><?php
+																							echo htmlspecialchars($car['car_name']);
+																							?></a></td>
 									<td><?php
 										echo htmlspecialchars($car['car_type']);
 										?></td>

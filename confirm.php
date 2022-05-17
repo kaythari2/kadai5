@@ -1,6 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(~0);
+require_once('constants.php');
 require_once("config.php");
 require_once("dbcontroller.php");
 
