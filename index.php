@@ -8,8 +8,8 @@ $dbController = new DBController($connector);
 $mCommons = $dbController->getMCommonList();
 
 $totalRowCount = $dbController->getRowCount(
-	htmlspecialchars($_GET['keyword']),
-	htmlspecialchars($_GET['frame_number'])
+	$_GET['keyword'],
+	$_GET['frame_number']
 );
 
 $limit = (isset($_GET['limit']) && is_numeric($_GET['limit'])) ? (int) $_GET['limit'] : 20;
@@ -22,15 +22,15 @@ $index = ($page - 1) * $limit;
 
 if (isset($_GET["search"]) && (!empty($_GET['keyword']) || !empty($_GET['frame_number']))) {
 	$tCars = $dbController->searchTCars(
-		htmlspecialchars($_GET["keyword"]),
-		htmlspecialchars($_GET["frame_number"]),
+		$_GET["keyword"],
+		$_GET["frame_number"],
 		$index,
 		$limit
 	);
 } elseif (isset($_GET["order_by"])) {
 	$tCars = $dbController->sortTCars(
-		htmlspecialchars($_GET["order_by"]),
-		htmlspecialchars($_GET["sort_order"]),
+		$_GET["order_by"],
+		$_GET["sort_order"],
 		$index,
 		$limit
 	);
@@ -67,32 +67,22 @@ require_once('header.php');
 								<tr>
 									<th>キーワード</th>
 									<td>
-										<input type="text" name="keyword" class="input_item" value="<?php
-																									echo (isset($_GET["keyword"]) ? htmlspecialchars($_GET["keyword"]) : '')
-																									?>">
+										<input type="text" name="keyword" class="input_item" value="<?php echo (isset($_GET["keyword"]) ? htmlspecialchars($_GET["keyword"]) : '') ?>">
 									</td>
 								</tr>
 								<tr>
 									<th>車台番号</th>
 									<td>
-										<input type="text" name="frame_number" class="input_item" value="<?php
-																											echo (isset($_GET["frame_number"]) ? htmlspecialchars($_GET["frame_number"]) : '')
-																											?>">
+										<input type="text" name="frame_number" class="input_item" value="<?php echo (isset($_GET["frame_number"]) ? htmlspecialchars($_GET["frame_number"]) : '') ?>">
 									</td>
 								</tr>
 								<tr>
 									<th>件数</th>
 									<td>
 										<select name="limit">
-											<option value="20" <?php if (empty($_GET['limit']) || $_GET['limit'] == 20) {
-																	echo "selected";
-																} ?>>20</option>
-											<option value="50" <?php if (isset($_GET['limit']) && $_GET['limit'] == 50) {
-																	echo "selected";
-																} ?>>50</option>
-											<option value="100" <?php if (isset($_GET['limit']) && $_GET['limit'] == 100) {
-																	echo "selected";
-																} ?>>100</option>
+											<option value="20" <?php if (empty($_GET['limit']) || $_GET['limit'] == 20) { echo "selected"; } ?>>20</option>
+											<option value="50" <?php if (isset($_GET['limit']) && $_GET['limit'] == 50) { echo "selected"; } ?>>50</option>
+											<option value="100" <?php if (isset($_GET['limit']) && $_GET['limit'] == 100) { echo "selected"; } ?>>100</option>
 										</select>
 									</td>
 								</tr>
@@ -110,69 +100,33 @@ require_once('header.php');
 					<table class="tableTypeB" id="exhibit_bid_list" style="margin: 0px;">
 						<thead>
 							<tr>
-								<th><a href=<?php
-											echo concatSortToUrl('maker_name');
-											?> style="color:white">
-										メーカー名<?php
-												echo sortOrder("maker_name", $_GET["order_by"], $_GET["sort_order"]);
-												?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl('car_name');
-											?> style="color:white">
-										車名<?php
-											echo sortOrder("car_name", $_GET["order_by"], $_GET["sort_order"]);
-											?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl('car_type');
-											?> style="color:white">
-										型式<?php
-											echo sortOrder("car_type", $_GET["order_by"], $_GET["sort_order"]);
-											?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl('frame_number');
-											?> style="color:white">
-										車台番号<?php
-											echo sortOrder("frame_number", $_GET["order_by"], $_GET["sort_order"]);
-											?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl('first_entry_date');
-											?> style="color:white">
-										初年度登録<?php
-												echo sortOrder("first_entry_date", $_GET["order_by"], $_GET["sort_order"]);
-												?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl(('mileage'));
-											?> style="color:white">
-										走行距離<?php
-											echo sortOrder("mileage", $_GET["order_by"], $_GET["sort_order"]);
-											?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl('out_color_name');
-											?> style="color:white">
-										外装色<?php
-											echo sortOrder("out_color_name", $_GET["order_by"], $_GET["sort_order"]);
-											?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl('shift_cd');
-											?> style="color:white">
-										シフト<?php
-											echo sortOrder("shift_cd", $_GET["order_by"], $_GET["sort_order"]);
-											?>
-									</a></th>
-								<th><a href=<?php
-											echo concatSortToUrl('sale_price');
-											?> style="color:white">
-										小売価格<?php
-											echo sortOrder("sale_price", $_GET["order_by"], $_GET["sort_order"]);
-											?>
-									</a></th>
+								<th>
+									<a href=<?php echo concatSortToUrl('maker_name'); ?> style="color:white">メーカー名<?php echo sortOrder("maker_name", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl('car_name'); ?> style="color:white">車名<?php echo sortOrder("car_name", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl('car_type'); ?> style="color:white">型式<?php echo sortOrder("car_type", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl('frame_number'); ?> style="color:white">車台番号<?php echo sortOrder("frame_number", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl('first_entry_date'); ?> style="color:white">初年度登録<?php echo sortOrder("first_entry_date", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl(('mileage')); ?> style="color:white">走行距離<?php echo sortOrder("mileage", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl('out_color_name'); ?> style="color:white">外装色<?php echo sortOrder("out_color_name", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl('shift_cd'); ?> style="color:white">シフト<?php echo sortOrder("shift_cd", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
+								<th>
+									<a href=<?php echo concatSortToUrl('sale_price'); ?> style="color:white">小売価格<?php echo sortOrder("sale_price", $_GET["order_by"], $_GET["sort_order"]); ?></a>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -180,37 +134,41 @@ require_once('header.php');
 							foreach ($tCars as $car) {
 							?>
 								<tr>
-									<td><a href="register.php?id=<?php echo $car['id']; ?>"><?php
-																							echo htmlspecialchars($car['maker_name']);
-																							?></a></td>
-									<td><a href="register.php?id=<?php echo $car['id']; ?>"><?php
-																							echo htmlspecialchars($car['car_name']);
-																							?></a></td>
-									<td><?php
-										echo htmlspecialchars($car['car_type']);
-										?></td>
-									<td><?php
-										echo htmlspecialchars($car['frame_number']);
-										?></td>
-									<td><?php
-										echo toWareki(htmlspecialchars($car['first_entry_date']));
-										?></td>
-									<td><?php
+									<td>
+										<a href="register.php?id=<?php echo $car['id']; ?>"><?php echo htmlspecialchars($car['maker_name']); ?></a>
+									</td>
+									<td>
+										<a href="register.php?id=<?php echo $car['id']; ?>"><?php echo htmlspecialchars($car['car_name']); ?></a>
+									</td>
+									<td>
+										<?php echo htmlspecialchars($car['car_type']); ?>
+									</td>
+									<td>
+										<?php echo htmlspecialchars($car['frame_number']); ?>
+									</td>
+									<td>
+										<?php echo toWareki(htmlspecialchars($car['first_entry_date'])); ?>
+									</td>
+									<td>
+										<?php
 										$mileageUnitCode = htmlspecialchars($mCommons[MILEAGE_UNIT_CODE][$car['mileage_unit_cd']]);
 										echo formattedMileage(htmlspecialchars($car['mileage']), $mileageUnitCode);
-										?></td>
-									<td><?php
-										echo formattedOutColor(htmlspecialchars($car['out_color_name']));
-										?></td>
-									<td><?php
+										?>
+									</td>
+									<td>
+										<?php echo formattedOutColor(htmlspecialchars($car['out_color_name'])); ?>
+									</td>
+									<td>
+										<?php
 										$shiftCode = htmlspecialchars($mCommons[SHIFT_CODE][$car['shift_cd']]);
 										$shiftPosition = htmlspecialchars($mCommons[SHIFT_POSITION][$car['shift_posi_cd']]);
 										$shiftCount = htmlspecialchars($car['shift_cnt']);
 										echo formattedShift($shiftCode, $shiftCount, $shiftPosition);
-										?></td>
-									<td><?php
-										echo formattedSalePrice(htmlspecialchars($car['sale_price']));
-										?></td>
+										?>
+									</td>
+									<td>
+										<?php echo formattedSalePrice(htmlspecialchars($car['sale_price'])); ?>
+									</td>
 								</tr>
 							<?php
 							}

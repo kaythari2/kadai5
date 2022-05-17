@@ -1,6 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(~0);
+require_once("constants.php");
 require_once("config.php");
 require_once("dbcontroller.php");
 
@@ -44,19 +45,11 @@ require_once('header.php');
                                 <th>ステータス</th>
                                 <td>
                                     <select name="st_cd">
-                                        <?php
-                                        foreach ($mCommons[1] as $key => $value) {
-                                        ?>
-
+                                        <?php foreach ($mCommons[1] as $key => $value) { ?>
                                             <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData["st_cd"] == $key) {
                                                                                     echo "selected";
-                                                                                }
-                                                                                ?>>
-                                                <?php echo $value; ?>
-                                            </option>
-                                        <?php
-                                        }
-                                        ?>
+                                                                                } ?>><?php echo $value; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </td>
                             </tr>
@@ -140,7 +133,7 @@ require_once('header.php');
                                 <th>シフト</th>
                                 <td>
                                     <select name="shift_posi_cd">
-                                        <?php foreach ($mCommons[7] as $key => $value) {
+                                        <?php foreach ($mCommons[SHIFT_POSITION] as $key => $value) {
                                         ?>
                                             <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData['shift_posi_cd'] == $key) {
                                                                                     echo "selected";
@@ -152,7 +145,7 @@ require_once('header.php');
                                     <input type="text" name="shift_cnt" value="<?php echo (isset($editData['shift_cnt']) && $editData['shift_cnt']) ? $editData['shift_cnt'] : 0; ?>" class="wS">&nbsp;
                                     <select name="shift_cd">
                                         <?php
-                                        foreach ($mCommons[6] as $key => $value) {
+                                        foreach ($mCommons[SHIFT_CODE] as $key => $value) {
                                         ?>
                                             <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData['shift_cd'] == $key) {
                                                                                     echo "selected";

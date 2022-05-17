@@ -2,6 +2,8 @@
 class DBController
 {
     public $mConnector;
+    public $order_by_keys = array("maker_name", "car_name", "car_type", "frame_number", "first_entry_date", "mileage", "out_color_name", "shift_cd", "sale_price");
+	public $sort_order_keys = array("asc","desc");
     function __construct($conn)
     {
         $this->mConnector = $conn;
@@ -9,8 +11,10 @@ class DBController
 
     public function getTCarList($index, $limit)
     {
-        $sql = "select * from t_car_base LIMIT " . $index . ", " . $limit;
+        $sql = "select * from t_car_base LIMIT :index, :limit";
         $statement = $this->mConnector->prepare($sql);
+        $statement->bindValue(":index", $index, PDO::PARAM_INT);
+        $statement->bindValue(":limit", $limit, PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetchAll();
         return $result;
@@ -18,8 +22,14 @@ class DBController
 
     public function sortTCars($order_by, $sort_order, $index, $limit)
     {
-        $sql = "select * from t_car_base order by " . $order_by . " " . $sort_order . " LIMIT " . $index . ", " . $limit;
+        if(!in_array($order_by, $this->order_by_keys) || !in_array($sort_order, $this->sort_order_keys)){
+			$order_by="frame_number";
+			$sort_order="asc";
+		}
+        $sql = "select * from t_car_base order by " . $order_by . " " . $sort_order . " LIMIT :index, :limit";
         $statement = $this->mConnector->prepare($sql);
+        $statement->bindValue(":index", $index, PDO::PARAM_INT);
+        $statement->bindValue(":limit", $limit, PDO::PARAM_INT);
         $statement->execute();
         $result = $statement->fetchAll();
         return $result;
@@ -51,8 +61,10 @@ class DBController
             }
             $sql .= "frame_number like :fnumber ";
         }
-        $sql .= " LIMIT " . $index . ", " . $limit;
+        $sql .= " LIMIT :index, :limit";
         $statement = $this->mConnector->prepare($sql);
+        $statement->bindValue(":index", $index, PDO::PARAM_INT);
+        $statement->bindValue(":limit", $limit, PDO::PARAM_INT);
         if ($keyword) {
             $keyParam = '%' . $keyword . '%';
             $statement->bindParam(":mname", $keyParam);
@@ -146,8 +158,6 @@ class DBController
     }
 
     public function insertTCar ($st_cd, $maker_name, $car_name, $car_type, $frame_number, $first_entry_date, $out_color_name, $shift_cd, $shift_cnt, $shift_posi_cd, $sale_price) {
-        $this->mConnector->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         $sql="insert into t_car_base (ins_user_id, st_cd, maker_name, car_name, car_type, frame_number, first_entry_date, out_color_name, shift_cd, shift_cnt, shift_posi_cd, sale_price) values (:ins_user_id, :st_cd, :maker_name, :car_name, :car_type, :frame_number, :first_entry_date, :out_color_name, :shift_cd, :shift_cnt, :shift_posi_cd, :sale_price)";
 		$statement = $this->mConnector->prepare($sql);
 		$ins_user_id=0;
@@ -167,8 +177,6 @@ class DBController
     }
 
     public function updateTCar($id, $st_cd, $maker_name, $car_name, $car_type, $frame_number, $first_entry_date, $out_color_name, $shift_cd, $shift_cnt, $shift_posi_cd, $sale_price) {
-        $this->mConnector->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         $sql = "update t_car_base set st_cd = :st_cd, maker_name = :maker_name, car_name = :car_name, car_type = :car_type, frame_number = :frame_number, first_entry_date = :first_entry_date, out_color_name = :out_color_name, shift_cd = :shift_cd, shift_cnt = :shift_cnt, shift_posi_cd = :shift_posi_cd, sale_price = :sale_price where id= :id";
         $statement = $this->mConnector->prepare($sql);
 		$statement->bindParam(":id",$id);

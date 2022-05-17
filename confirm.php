@@ -97,7 +97,7 @@ require_once('header.php');
 							<tr>
 								<th>シフト</th>
 								<td>
-									<?php echo $mCommons[7][$_POST['shift_posi_cd']] . " " . htmlspecialchars($_POST['shift_cnt']) . " " . $mCommons[6][$_POST['shift_cd']]; ?>
+									<?php echo $mCommons[SHIFT_POSITION][$_POST['shift_posi_cd']] . " " . htmlspecialchars($_POST['shift_cnt']) . " " . $mCommons[SHIFT_CODE][$_POST['shift_cd']]; ?>
 									<input type="hidden" name="shift_cd" value="<?php echo $_POST['shift_cd']; ?>">
 									<input type="hidden" name="shift_posi_cd" value="<?php echo $_POST['shift_posi_cd']; ?>">
 									<input type="hidden" name="shift_cnt" value="<?php echo htmlspecialchars($_POST['shift_cnt']); ?>">
