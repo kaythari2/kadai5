@@ -56,6 +56,7 @@ function formattedSalePrice ($sale_price) {
 }
 
 function sortOrder ($current, $order_by, $sort_order) {
+	if (!$order_by && !$sort_order) return "";
 	if ($current==$order_by) {
 		if($sort_order=="asc"){
 			return "▲";

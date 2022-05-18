@@ -45,10 +45,8 @@ require_once('header.php');
                                 <th>ステータス</th>
                                 <td>
                                     <select name="st_cd">
-                                        <?php foreach ($mCommons[1] as $key => $value) { ?>
-                                            <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData["st_cd"] == $key) {
-                                                                                    echo "selected";
-                                                                                } ?>><?php echo $value; ?></option>
+                                        <?php foreach ($mCommons[CAR_STATUS] as $key => $value) { ?>
+                                            <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData["st_cd"] == $key) {echo "selected";} ?>><?php echo $value; ?></option>
                                         <?php } ?>
                                     </select>
                                 </td>
@@ -57,14 +55,9 @@ require_once('header.php');
                                 <th>メーカー名</th>
                                 <td>
                                     <select name="maker_cd">
-                                        <?php foreach ($mMakers as $key => $value) {
-                                        ?>
-                                            <option value="<?php echo $value['id']; ?>" <?php if (isset($_GET['id']) && $editData['maker_name'] == $value['name']) {
-                                                                                            echo "selected";
-                                                                                        } ?>> <?php echo $value['name']; ?></option>
-                                        <?php
-                                        }
-                                        ?>
+                                        <?php foreach ($mMakers as $key => $value) { ?>
+                                            <option value="<?php echo $value['id']; ?>" <?php if (isset($_GET['id']) && $editData['maker_name'] == $value['name']) { echo "selected"; } ?>> <?php echo $value['name']; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </td>
                             </tr>
@@ -72,14 +65,9 @@ require_once('header.php');
                                 <th>車名</th>
                                 <td>
                                     <select name="car_name_cd">
-                                        <?php foreach ($mCarNames as $key => $value) {
-                                        ?>
-                                            <option value="<?php echo $value['id']; ?>" <?php if (isset($_GET['id']) && $editData['car_name'] == $value['name']) {
-                                                                                            echo "selected";
-                                                                                        } ?>> <?php echo $value['name']; ?></option>
-                                        <?php
-                                        }
-                                        ?>
+                                        <?php foreach ($mCarNames as $key => $value) { ?>
+                                            <option value="<?php echo $value['id']; ?>" <?php if (isset($_GET['id']) && $editData['car_name'] == $value['name']) { echo "selected"; } ?>> <?php echo $value['name']; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </td>
                             </tr>
@@ -99,12 +87,8 @@ require_once('header.php');
                                         $year = date_parse($editData["first_entry_date"])["year"];
                                         for ($y = date("Y"); $y >= 1900; $y--) {
                                         ?>
-                                            <option value="<?php echo $y; ?>" <?php if (isset($_GET['id']) && $year == $y) {
-                                                                                    echo "selected";
-                                                                                } ?>><?php echo $y; ?></option>
-                                        <?php
-                                        }
-                                        ?>
+                                            <option value="<?php echo $y; ?>" <?php if (isset($_GET['id']) && $year == $y) { echo "selected"; } ?>><?php echo $y; ?></option>
+                                        <?php } ?>
                                     </select>&nbsp;年&nbsp;
                                     <select name="first_entry_date_m">
                                         <?php
@@ -116,12 +100,8 @@ require_once('header.php');
                                         }
                                         for ($m = 1; $m <= 12; $m++) {
                                         ?>
-                                            <option value="<?php echo str_pad($m, 2, '0', STR_PAD_LEFT); ?>" <?php if (isset($_GET['id']) && $month == $m) {
-                                                                                                                    echo "selected";
-                                                                                                                } ?>><?php echo str_pad($m, 2, '0', STR_PAD_LEFT); ?></option>
-                                        <?php
-                                        }
-                                        ?>
+                                            <option value="<?php echo str_pad($m, 2, '0', STR_PAD_LEFT); ?>" <?php if (isset($_GET['id']) && $month == $m) { echo "selected"; } ?>><?php echo str_pad($m, 2, '0', STR_PAD_LEFT); ?></option>
+                                        <?php } ?>
                                     </select>&nbsp;月
                                 </td>
                             </tr>
@@ -133,23 +113,16 @@ require_once('header.php');
                                 <th>シフト</th>
                                 <td>
                                     <select name="shift_posi_cd">
-                                        <?php foreach ($mCommons[SHIFT_POSITION] as $key => $value) {
-                                        ?>
-                                            <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData['shift_posi_cd'] == $key) {
-                                                                                    echo "selected";
-                                                                                } ?>> <?php echo $value; ?></option>
-                                        <?php
-                                        }
-                                        ?>
+                                        <?php foreach ($mCommons[SHIFT_POSITION] as $key => $value) {?>
+                                            <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData['shift_posi_cd'] == $key) { echo "selected"; } ?>> <?php echo $value; ?></option>
+                                        <?php } ?>
                                     </select>&nbsp;
                                     <input type="text" name="shift_cnt" value="<?php echo (isset($editData['shift_cnt']) && $editData['shift_cnt']) ? $editData['shift_cnt'] : 0; ?>" class="wS">&nbsp;
                                     <select name="shift_cd">
                                         <?php
                                         foreach ($mCommons[SHIFT_CODE] as $key => $value) {
                                         ?>
-                                            <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData['shift_cd'] == $key) {
-                                                                                    echo "selected";
-                                                                                } ?>> <?php echo $value; ?></option>
+                                            <option value="<?php echo $key; ?>" <?php if (isset($_GET['id']) && $editData['shift_cd'] == $key) { echo "selected"; } ?>> <?php echo $value; ?></option>
                                         <?php
                                         }
                                         ?>
